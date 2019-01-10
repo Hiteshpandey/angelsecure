@@ -1,161 +1,78 @@
 <?php
+
 /**
- * Hit functions and definitions
+ * Sets up theme defaults and registers support for various WordPress features.
  *
- * @link https://developer.wordpress.org/themes/basics/theme-functions/
- *
- * @package Hit
+ * Note that this function is hooked into the after_setup_theme hook, which runs
+ * before the init hook. The init hook is too late for some features, such as indicating
+ * support post thumbnails.
  */
+function hit_theme_setup() {
 
-if ( ! function_exists( 'hit_setup' ) ) :
-	/**
-	 * Sets up theme defaults and registers support for various WordPress features.
-	 *
-	 * Note that this function is hooked into the after_setup_theme hook, which
-	 * runs before the init hook. The init hook is too late for some features, such
-	 * as indicating support for post thumbnails.
-	 */
-	function hit_setup() {
-		/*
-		 * Make theme available for translation.
-		 * Translations can be filed in the /languages/ directory.
-		 * If you're building a theme based on Hit, use a find and replace
-		 * to change 'hit' to the name of your theme in all the template files.
-		 */
-		load_theme_textdomain( 'hit', get_template_directory() . '/languages' );
+	remove_action( 'omega_before_header', 'omega_get_primary_menu' );	
+	add_action( 'omega_header', 'omega_get_primary_menu' );
+	add_action( 'omega_header', 'hit_header_search' );
 
-		// Add default posts and comments RSS feed links to head.
-		add_theme_support( 'automatic-feed-links' );
+	add_theme_support( 'custom-background', 
+		array(
+			'default-color' => 'FFFFFF',
+			'default-repeat'         => 'repeat',
+			'default-position-x'     => 'center',
+			'default-attachment'     => 'fixed',
+			'default-image' => get_stylesheet_directory_uri() . '/images/background.jpg',
+		));
 
-		/*
-		 * Let WordPress manage the document title.
-		 * By adding theme support, we declare that this theme does not use a
-		 * hard-coded <title> tag in the document head, and expect WordPress to
-		 * provide it for us.
-		 */
-		add_theme_support( 'title-tag' );
+	add_action( 'omega_after_header', 'hit_intro' );
 
-		/*
-		 * Enable support for Post Thumbnails on posts and pages.
-		 *
-		 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
-		 */
-		add_theme_support( 'post-thumbnails' );
+	add_filter( 'omega_site_description', 'hit_site_description' );
 
-		// This theme uses wp_nav_menu() in one location.
-		register_nav_menus( array(
-			'menu-1' => esc_html__( 'Primary', 'hit' ),
-		) );
+	add_action( 'wp_enqueue_scripts', 'hit_scripts_styles' );
 
-		/*
-		 * Switch default core markup for search form, comment form, and comments
-		 * to output valid HTML5.
-		 */
-		add_theme_support( 'html5', array(
-			'search-form',
-			'comment-form',
-			'comment-list',
-			'gallery',
-			'caption',
-		) );
+	load_child_theme_textdomain( 'hit', get_stylesheet_directory() . '/languages' );
+}
 
-		// Set up the WordPress core custom background feature.
-		add_theme_support( 'custom-background', apply_filters( 'hit_custom_background_args', array(
-			'default-color' => 'ffffff',
-			'default-image' => '',
-		) ) );
+add_action( 'after_setup_theme', 'hit_theme_setup', 11 );
 
-		// Add theme support for selective refresh for widgets.
-		add_theme_support( 'customize-selective-refresh-widgets' );
-
-		/**
-		 * Add support for core custom logo.
-		 *
-		 * @link https://codex.wordpress.org/Theme_Logo
-		 */
-		add_theme_support( 'custom-logo', array(
-			'height'      => 250,
-			'width'       => 250,
-			'flex-width'  => true,
-			'flex-height' => true,
-		) );
+/**
+ * Loads the intro.php template.
+ */
+function hit_intro() {
+	$id = get_option('page_for_posts');
+	// get title		
+	if (is_front_page() || (is_home() && ($id=='0'))) {
+		$the_title = "<h1 class='intro-title site-description'>" . get_bloginfo ( 'description' ) . "</h1>";
+	} elseif ( is_day() || is_month() || is_year() || is_tag() || is_category() || is_home() ) {
+		$id = get_option('page_for_posts');
+		if ( 'posts' == get_option( 'show_on_front' ) ) {
+			$the_title = get_bloginfo ( 'description' );
+		} else {
+			$the_title = get_the_title($id);
+		}
+		$the_title = "<h2 class='intro-title'>$the_title</h2>";
+	} elseif (is_singular('post' )) {
+		$the_title = "<h3 class='intro-title'>" . get_the_title($id) . "</h3>"; 
+	} else {
+		$the_title = "<h1 class='intro-title'>" . get_the_title() . "</h1>"; 
 	}
-endif;
-add_action( 'after_setup_theme', 'hit_setup' );
 
-/**
- * Set the content width in pixels, based on the theme's design and stylesheet.
- *
- * Priority 0 to make it available to lower priority callbacks.
- *
- * @global int $content_width
- */
-function hit_content_width() {
-	// This variable is intended to be overruled from themes.
-	// Open WPCS issue: {@link https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1043}.
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-	$GLOBALS['content_width'] = apply_filters( 'hit_content_width', 640 );
-}
-add_action( 'after_setup_theme', 'hit_content_width', 0 );
-
-/**
- * Register widget area.
- *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
- */
-function hit_widgets_init() {
-	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'hit' ),
-		'id'            => 'sidebar-1',
-		'description'   => esc_html__( 'Add widgets here.', 'hit' ),
-		'before_widget' => '<section id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</section>',
-		'before_title'  => '<h2 class="widget-title">',
-		'after_title'   => '</h2>',
-	) );
-}
-add_action( 'widgets_init', 'hit_widgets_init' );
-
-/**
- * Enqueue scripts and styles.
- */
-function hit_scripts() {
-	wp_enqueue_style( 'hit-style', get_stylesheet_uri() );
-
-	wp_enqueue_script( 'hit-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
-
-	wp_enqueue_script( 'hit-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
-
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
-}
-add_action( 'wp_enqueue_scripts', 'hit_scripts' );
-
-/**
- * Implement the Custom Header feature.
- */
-require get_template_directory() . '/inc/custom-header.php';
-
-/**
- * Custom template tags for this theme.
- */
-require get_template_directory() . '/inc/template-tags.php';
-
-/**
- * Functions which enhance the theme by hooking into WordPress.
- */
-require get_template_directory() . '/inc/template-functions.php';
-
-/**
- * Customizer additions.
- */
-require get_template_directory() . '/inc/customizer.php';
-
-/**
- * Load Jetpack compatibility file.
- */
-if ( defined( 'JETPACK__VERSION' ) ) {
-	require get_template_directory() . '/inc/jetpack.php';
+	echo '<div class="site-intro">'.$the_title.'</div>';
 }
 
+function hit_site_description($desc) {
+	$desc = "";
+	return $desc;
+}
+
+function hit_scripts_styles() {
+	$query_args = array(
+	 'family' => 'Libre+Franklin:300,400'
+	);
+ 	wp_enqueue_style('hit-google-fonts-libre', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null  );
+
+ 	wp_enqueue_script('jquery-superfish', get_stylesheet_directory_uri() . '/js/superfish.js', array('jquery'), '1.0.0', true );
+ 	wp_enqueue_script('hit-init', get_stylesheet_directory_uri() . '/js/init.js', array('jquery'));
+}
+
+function hit_header_search() {
+	get_search_form();
+}

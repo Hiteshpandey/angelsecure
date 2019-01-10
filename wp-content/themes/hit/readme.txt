@@ -1,38 +1,54 @@
-=== Hit ===
+Hit WordPress Theme
+---------------------
 
-Contributors: automattic
-Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Created by themehit.com
 
-Requires at least: 4.5
-Tested up to: 4.8
-Stable tag: 1.0.0
-License: GNU General Public License v2 or later
-License URI: LICENSE
 
-A starter theme called Hit.
+Install
+-------
+1. Download "omega" parent theme from http://wordpress.org/themes/omega
+2. Go to your WordPress dashboard and select Appearance > Install, click Upload link.
+3. Upload both Omega and this child theme, then activate the child theme
 
-== Description ==
 
-Custom theme: Hit, developed by Me
+License
+-------
+Hit WordPress Theme, Copyright (C) 2016 themehit.com
+Hit WordPress Theme is licensed under the GPL.
+Source: https://wordpress.org/themes/hit/
 
-== Installation ==
+Hit WordPress Theme is child theme of Omega WordPress Theme, Copyright 2013 Hence (Han) Wijaya
+Omega WordPress Theme is distributed under the terms of the GNU GPL
 
-1. In your admin panel, go to Appearance > Themes and click the Add New button.
-2. Click Upload Theme and Choose File, then select the theme's .zip file. Click Install Now.
-3. Click Activate to use your new theme right away.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-== Frequently Asked Questions ==
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-= Does this theme support any plugins? =
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses.
 
-Hit includes support for Infinite Scroll in Jetpack.
+Hit WordPress Theme bundles the following third-party resources:
 
-== Changelog ==
+jQuery Superfish Menu (superfish.js), Copyright (c) 2013 Joel Birch
+jQuery Superfish Menu is distributed under the terms of the GNU GPL & MIT
+Source: http://users.tpg.com.au/j_birch/plugins/superfish/
 
-= 1.0 - May 12 2015 =
-* Initial release
+https://unsplash.com/photos/UmWW77lYEcA, Copyright Nik MacMillan (https://unsplash.com/@nikarthur)
+The image is distributed under CC0 Public Domain license
 
-== Credits ==
+Baseline Reset (normalize.css 2.1.2) is a project by Nicolas Gallagher, co-created with Jonathan Neal, is licensed under the MIT license
 
-* Based on Underscores https://underscores.me/, (C) 2012-2017 Automattic, Inc., [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
-* normalize.css https://necolas.github.io/normalize.css/, (C) 2012-2016 Nicolas Gallagher and Jonathan Neal, [MIT](https://opensource.org/licenses/MIT)
+Changelog
+---------
+
+0.9.2	2016-06-25
+- First release
+
+1.0.5	2017-02-22
+- theme review update 
